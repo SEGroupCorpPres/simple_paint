@@ -1,6 +1,7 @@
-//GENERATED BARREL FILE 
-export './data/data.dart'; 
-export './domain/domain.dart'; 
-export './presentation/blocs/blocs.dart'; 
-export './presentation/pages/pages.dart'; 
-export './presentation/widgets/widgets.dart'; 
+//GENERATED BARREL FILE
+export 'package:simple_paint/app/data/data.dart';
+export 'package:simple_paint/app/domain/domain.dart';
+export 'package:simple_paint/app/presentation/blocs/blocs.dart';
+export 'package:simple_paint/app/presentation/pages/pages.dart';
+export 'package:simple_paint/app/presentation/widgets/widgets.dart';
+export 'package:simple_paint/core/core.dart';

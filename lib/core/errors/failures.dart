@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+import 'package:simple_paint/core/errors/errors.dart';
 
 abstract class Failure extends Equatable {
   final String message;

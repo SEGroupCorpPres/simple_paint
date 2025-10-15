@@ -1,3 +1,5 @@
 //GENERATED BARREL FILE 
-export 'notification_service.dart'; 
-export 'storage_service.dart'; 
+export 'package:simple_paint/core/services/notification_service.dart';
+export 'package:simple_paint/core/services/storage_service.dart';
+export 'package:simple_paint/core/core.dart';
+

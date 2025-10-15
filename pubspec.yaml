@@ -89,6 +89,9 @@ flutter:
     - assets/images/
   
   fonts:
+    - family: PressStart2P
+      fonts:
+        - asset: assets/fonts/press_start_2p/PressStart2P-Regular.ttf
     - family: Roboto
       fonts:
         - asset: assets/fonts/roboto/Roboto-VariableFont_wdth_wght.ttf

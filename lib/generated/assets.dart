@@ -92,6 +92,8 @@ class Assets {
   static const String imagesMainBgShader = 'assets/images/main_bg_shader.png';
   static const String l10nEn = 'assets/l10n/en.json';
   static const String l10nRu = 'assets/l10n/ru.json';
+  static const String pressStart2pOFL = 'assets/fonts/press_start_2p/OFL.txt';
+  static const String pressStart2pPressStart2PRegular = 'assets/fonts/press_start_2p/PressStart2P-Regular.ttf';
   static const String robotoOFL = 'assets/fonts/roboto/OFL.txt';
   static const String robotoREADME = 'assets/fonts/roboto/README.txt';
   static const String robotoRobotoItalicVariableFontWdthWght = 'assets/fonts/roboto/Roboto-Italic-VariableFont_wdth_wght.ttf';

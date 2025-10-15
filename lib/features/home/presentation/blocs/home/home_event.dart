@@ -1,3 +1,3 @@
 abstract class HomeEvent {}
 
-class InitEvent extends HomeEvent {}
+class HomeInitEvent extends HomeEvent {}
