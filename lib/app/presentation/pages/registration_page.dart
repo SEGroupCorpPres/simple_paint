@@ -1,4 +1,5 @@
 import 'package:simple_paint/app/app_barrels.dart';
+import 'package:simple_paint/core/core.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -10,6 +11,7 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
+    log('registration');
     return Container();
   }
 }

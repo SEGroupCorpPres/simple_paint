@@ -1,6 +1,8 @@
+import 'package:simple_paint/app/app_barrels.dart';
 import 'package:simple_paint/core/router/router.dart';
 import 'package:simple_paint/features/home/presentation/pages/home_page.dart';
 import 'package:simple_paint/features/paint/presentation/pages/add_edit_paint_page.dart';
+
 Page<dynamic> _defaultPageBuilder(Widget child, GoRouterState state) {
   return CustomTransitionPage(
     key: state.pageKey,
@@ -28,7 +30,7 @@ class AppRouter {
       navigatorKey: _rootNavigatorKey,
       // initialLocation: '/login',
       // initialLocation: '/registration',
-      initialLocation: '/home',
+      initialLocation: RouterNames.home,
       // initialLocation: '/paint',
       redirect: _redirect,
       refreshListenable: GoRouterRefreshStream(authBloc.stream),
@@ -39,7 +41,11 @@ class AppRouter {
         ),
         GoRoute(
           path: RouterNames.paint,
-          pageBuilder: (context, state) => _defaultPageBuilder(const AddEditPaintPage(), state),
+          pageBuilder: (context, state) {
+            final String id = (state.extra as Map?)?['id'];
+            final bool isEdit = (state.extra as Map?)?['isEdit'];
+            return _defaultPageBuilder(AddEditPaintPage(id: id, isEdit: isEdit), state);
+          },
         ),
         GoRoute(
           path: RouterNames.login,
@@ -47,7 +53,6 @@ class AppRouter {
             return LoginPage();
           },
         ),
-
         GoRoute(
           path: RouterNames.register,
           builder: (context, state) {
@@ -63,41 +68,21 @@ class AppRouter {
     final authState = authBloc.state; // context.read o'rniga to'g'ridan-to'g'ri authBloc
     final currentLocation = state.matchedLocation;
 
-      // Auth tekshiruvi boshlang'ich holatda bo'lsa, splash da qoladi
-    //   if (authState is AuthInitial || authState is AuthLoading) {
-    //     return null; // splash da qolish
-    //   }
+    // Auth tekshiruvi boshlang'ich holatda bo'lsa, splash da qoladi
+    if (authState is AuthInitialState || authState is AuthLoadingState) {
+      return null; // splash da qolish
+    }
     //
     //   // Auth state ga qarab yo'naltirish
-    //   if (authState is Authenticated) {
-    //     return '/home';
-    //   }
+    if (authState is AuthSignedInState) {
+      return '/home';
+    }
     //
-    //   if (authState is AuthError) {
-    //     // Xatolik bo'lsa login sahifaga
-    //     return '/login';
-    //   }
-    //
-    //   if (authState is AuthRequired) {
-    //     // Auth talab qilingan, login ga yo'naltirish
-    //     final redirect = authState.redirectAfterAuth;
-    //     if (redirect != null && redirect.isNotEmpty) {
-    //       return '/login?redirect=${Uri.encodeComponent(redirect)}';
-    //     }
-    //     return '/login';
-    //   }
-    //
-    // // Auth bo'lgan foydalanuvchini login/register sahifalaridan home ga yo'naltirish
-    // if (authState is Authenticated &&
-    //     (currentLocation.startsWith('/login') || currentLocation.startsWith('/registration'))) {
-    //   return '/home';
-    // }
-    //
-    // // Onboarding logic - agar kerak bo'lsa
-    // // GuestState yoki AuthenticatedState dan onboarding ga yo'naltirish
-    // // Bu logic sizning business requirement ga bog'liq
-    //
-    // return null; // redirect yo'q
+    if (authState is AuthErrorState) {
+      // Xatolik bo'lsa login sahifaga
+      return '/login';
+    }
+    return null; // redirect yo'q
   }
 }
 

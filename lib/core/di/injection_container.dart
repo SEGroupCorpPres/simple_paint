@@ -1,27 +1,31 @@
 import 'package:simple_paint/core/core.dart';
+import 'package:simple_paint/app/app_barrels.dart';
+
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
   // External dependencies
   final sharedPreferences = await SharedPreferences.getInstance();
-
   // BLoC
+
   sl.registerFactory<LanguageCubit>(() => LanguageCubit());
-  // // sl.registerFactory<AuthBloc>(() => AuthBloc(repository: sl(), logger: sl()));
-
   sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
-  // sl.registerLazySingleton<LocationRepository>(() => LocationRepository());
-  // sl.registerLazySingleton<LocationCubit>(() => LocationCubit(sl<LocationRepository>()));
-
-  // // Repository
-  // // sl.registerLazySingleton<AuthRepository>(
-  // //   () => AuthRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
-  // // );
-  // // Data sources
-  // sl.registerLazySingleton<AuthRemoteDataSource>(
-  //   () => AuthRemoteDataSource(sl<Dio>(instanceName: 'apiDio')),
-  // );
-  // // sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSourceImpl(prefs: sl()));
+  sl
+    ..registerFactory(() => AuthBloc(signIn: sl(), signUp: sl(), signOut: sl()))
+    ..registerLazySingleton(() => SignIn(sl()))
+    ..registerLazySingleton(() => SignUp(sl()))
+    ..registerLazySingleton(() => SignOut(sl()))
+    ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImp(sl()))
+    ..registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(
+        firebaseAuth: sl(),
+        firebaseFirestore: sl(),
+        firebaseStorage: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => FirebaseAuth.instance)
+    ..registerLazySingleton(() => FirebaseFirestore.instance)
+    ..registerLazySingleton(() => FirebaseStorage.instance);
   final logger = Logger(
     printer: PrettyPrinter(
       methodCount: 0,
@@ -33,14 +37,4 @@ Future<void> initializeDependencies() async {
     ),
   );
   sl.registerLazySingleton<Logger>(() => logger);
-  // AuthInterceptor ni ulash
-  // sl.registerLazySingleton<AuthInterceptor>(
-  //   () => AuthInterceptor(
-  //     local: sl<AuthLocalDataSource>(),
-  //     refreshApi: sl<RefreshApi>(),
-  //     logger: sl<Logger>(),
-  //     dio: sl<Dio>(instanceName: 'apiDio'),
-  //   ),
-  // );
-
 }

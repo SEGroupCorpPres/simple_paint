@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
+import 'package:simple_paint/core/core.dart';
 
-import 'paint_event.dart';
-import 'paint_state.dart';
+part 'paint_event.dart';
+part 'paint_state.dart';
 
 class PaintBloc extends Bloc<PaintEvent, PaintState> {
   PaintBloc() : super(PaintState().init()) {

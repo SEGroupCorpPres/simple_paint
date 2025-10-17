@@ -1,6 +1,10 @@
 // external packages
+export 'dart:async';
+export 'dart:developer' hide Flow;
+
 export 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:connectivity_plus/connectivity_plus.dart';
+export 'package:dartz/dartz.dart' hide State, Order, Task;
 export 'package:easy_localization/easy_localization.dart' hide TextDirection;
 export 'package:equatable/equatable.dart';
 export 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +14,8 @@ export 'package:firebase_storage/firebase_storage.dart';
 export 'package:flutter/cupertino.dart';
 export 'package:flutter/foundation.dart';
 export 'package:flutter/material.dart' hide RefreshCallback;
+export 'package:flutter/services.dart';
+export 'dart:ui' hide Image, ImageDecoderCallback, decodeImageFromList, Gradient, TextStyle, StrutStyle;
 export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:flutter_local_notifications/flutter_local_notifications.dart';
 export 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -23,18 +29,22 @@ export 'package:google_fonts/google_fonts.dart';
 export 'package:image_picker/image_picker.dart';
 export 'package:intl/intl.dart' hide TextDirection;
 export 'package:logger/logger.dart';
+export 'package:provider/provider.dart';
 export 'package:shared_preferences/shared_preferences.dart';
-export 'dart:async';
-// internal packages
-export 'package:simple_paint/app/app_barrels.dart';
+export 'package:simple_paint/core/common/common.dart';
 export 'package:simple_paint/core/constants/constants.dart';
 export 'package:simple_paint/core/di/di.dart';
 export 'package:simple_paint/core/errors/errors.dart';
 export 'package:simple_paint/core/errors/exceptions.dart';
+export 'package:simple_paint/core/extensions/extensions.dart';
 export 'package:simple_paint/core/localization/localization.dart';
 export 'package:simple_paint/core/network/network.dart';
 export 'package:simple_paint/core/observer/observer.dart';
 export 'package:simple_paint/core/router/router.dart';
 export 'package:simple_paint/core/services/services.dart';
 export 'package:simple_paint/core/styles/styles.dart';
-export 'package:simple_paint/core/widgets/widgets.dart';
+export 'package:simple_paint/core/use_cases/use_cases_barrel.dart';
+export 'package:simple_paint/core/utils/utils.dart';
+export 'package:simple_paint/firebase_options.dart';
+// internal packages
+export 'package:simple_paint/generated/assets.dart';

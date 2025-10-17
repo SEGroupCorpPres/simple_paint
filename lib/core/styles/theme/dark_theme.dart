@@ -1,23 +1,30 @@
 import 'package:simple_paint/core/core.dart';
 
 AppBarTheme appBarTheme(BuildContext context) => AppBarTheme(
-  titleTextStyle: TextStyle(
-    fontFamily: 'Roboto',
+  titleTextStyle: GoogleFonts.roboto(
     fontSize: AppSizes.fontSize17.sp,
     color: AppColors.mainTextColor,
     fontWeight: FontWeight.w500,
     height: AppSizes.fontSize17.sp,
     letterSpacing: 0,
   ),
-  backgroundColor: Colors.transparent,
+  elevation: 2,
+  backgroundColor: Color(0x03C4C4C4),
 );
 
 ThemeData darkTheme(BuildContext context) => ThemeData(
   brightness: Brightness.dark,
   primaryColor: AppColors.mainColor,
+  appBarTheme: appBarTheme(context),
   textTheme: TextTheme(
     bodyLarge: GoogleFonts.pressStart2p(
       fontSize: AppSizes.fontSize20.sp,
+      color: AppColors.mainTextColor,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0,
+    ),
+    titleMedium: GoogleFonts.pressStart2p(
+      fontSize: AppSizes.fontSize17.sp,
       color: AppColors.mainTextColor,
       fontWeight: FontWeight.w400,
       letterSpacing: 0,
@@ -50,29 +57,28 @@ ThemeData darkTheme(BuildContext context) => ThemeData(
       letterSpacing: 0,
       height: 24.sp,
     ),
-    labelStyle: TextStyle(
-      fontFamily: 'VelaSans',
-      fontSize: 16.sp,
-      color: AppColors.secondaryColor,
-      fontWeight: FontWeight.w500,
-    ),
-    errorStyle: TextStyle(
-      fontFamily: 'VelaSans',
-      height: 1.3,
-      fontSize: 16.sp,
-      overflow: TextOverflow.visible,
-      color: CupertinoColors.destructiveRed,
-      fontWeight: FontWeight.w500,
-    ),
+    // labelStyle: TextStyle(
+    //   fontFamily: 'VelaSans',
+    //   fontSize: 16.sp,
+    //   color: AppColors.secondaryColor,
+    //   fontWeight: FontWeight.w500,
+    // ),
+    // errorStyle: TextStyle(
+    //   fontFamily: 'VelaSans',
+    //   height: 1.3,
+    //   fontSize: 16.sp,
+    //   overflow: TextOverflow.visible,
+    //   color: CupertinoColors.destructiveRed,
+    //   fontWeight: FontWeight.w500,
+    // ),
   ),
   textButtonTheme: TextButtonThemeData(
     style: TextButton.styleFrom(
       enableFeedback: false,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-        side: BorderSide(color: Colors.white.withValues(alpha: .1), width: 1),
+        borderRadius: BorderRadius.circular(AppSizes.defaultBorderRadius.r),
       ),
-      backgroundColor: AppColors.mainTextColor,
+      backgroundColor: Colors.transparent,
       splashFactory: NoSplash.splashFactory,
       overlayColor: WidgetStateColor.transparent,
       surfaceTintColor: Colors.transparent,

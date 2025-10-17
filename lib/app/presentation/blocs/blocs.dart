@@ -1,5 +1,4 @@
 //GENERATED BARREL FILE 
-export './auth/auth_bloc.dart'; 
-export './auth/auth_event.dart'; 
-export './auth/auth_state.dart';
-export './cubits/language/language_cubit.dart';
+export 'package:simple_paint/app/presentation/blocs/auth/auth_bloc.dart';
+export 'package:simple_paint/app/presentation/blocs/cubits/language/language_cubit.dart';
+export 'package:simple_paint/app/app_barrels.dart';

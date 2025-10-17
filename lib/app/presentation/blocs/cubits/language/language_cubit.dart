@@ -1,4 +1,5 @@
 import 'package:simple_paint/app/app_barrels.dart';
+import 'package:simple_paint/core/core.dart';
 
 part 'language_state.dart';
 
