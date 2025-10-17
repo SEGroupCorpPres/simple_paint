@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1096790051246",
+    "project_id": "swiftuitodolisttut",
+    "storage_bucket": "swiftuitodolisttut.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096790051246:android:912676117de7ec2c14e03f",
+        "android_client_info": {
+          "package_name": "inc.futuretechnologies.presidentftinc.hybrid.simple_paint"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGNQPrfsOQklhaKr4E10oBc-yZD9wblpk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
