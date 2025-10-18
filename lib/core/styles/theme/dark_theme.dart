@@ -23,31 +23,39 @@ ThemeData darkTheme(BuildContext context) => ThemeData(
       fontWeight: FontWeight.w400,
       letterSpacing: 0,
     ),
-    titleMedium: GoogleFonts.pressStart2p(
+    titleMedium: GoogleFonts.roboto(
       fontSize: AppSizes.fontSize17.sp,
+      color: AppColors.mainTextColor,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0,
+    ),
+    labelSmall: GoogleFonts.roboto(
+      fontSize: AppSizes.fontSize14.sp,
       color: AppColors.mainTextColor,
       fontWeight: FontWeight.w400,
       letterSpacing: 0,
     ),
   ),
   scaffoldBackgroundColor: AppColors.mainColor,
+  iconButtonTheme: IconButtonThemeData(
+    style: IconButton.styleFrom(
+      backgroundColor: Colors.white24,
+      splashFactory: NoSplash.splashFactory,
+      overlayColor: WidgetStateColor.transparent,
+    ),
+  ),
   inputDecorationTheme: InputDecorationTheme(
-    constraints: BoxConstraints(minHeight: 60.h),
-    contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20.r),
+    constraints: BoxConstraints(maxHeight: 30.h),
+    border: UnderlineInputBorder(
       borderSide: BorderSide(color: AppColors.secondaryColor, width: .5.w),
     ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20.r),
+    enabledBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: CupertinoColors.systemGreen, width: 1.w),
     ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20.r),
+    focusedBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: CupertinoColors.systemBlue, width: 1.w),
     ),
-    errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(20.r),
+    errorBorder: UnderlineInputBorder(
       borderSide: BorderSide(color: CupertinoColors.destructiveRed, width: 1.w),
     ),
     helperStyle: GoogleFonts.roboto(
@@ -55,8 +63,14 @@ ThemeData darkTheme(BuildContext context) => ThemeData(
       color: Colors.white,
       fontWeight: FontWeight.w400,
       letterSpacing: 0,
-      height: 24.sp,
     ),
+    hintStyle: GoogleFonts.roboto(
+      fontSize: AppSizes.fontSize14.sp,
+      color: AppColors.secondaryColor,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0,
+    ),
+
     // labelStyle: TextStyle(
     //   fontFamily: 'VelaSans',
     //   fontSize: 16.sp,

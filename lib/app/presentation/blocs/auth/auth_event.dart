@@ -34,3 +34,11 @@ class AuthSignOutEvent extends AuthEvent {
   @override
   List<Object?> get props => [];
 }
+
+class CheckIfUserIsFirstTimerEvent extends AuthEvent {
+  const CheckIfUserIsFirstTimerEvent();
+}
+
+class CacheFirstTimerEvent extends AuthEvent {
+  const CacheFirstTimerEvent();
+}

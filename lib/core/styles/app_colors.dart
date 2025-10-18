@@ -8,8 +8,8 @@ class AppColors {
   static const Color secondaryTextColor = Color(0xFF131313);
   static const Color helperTextColor = Color(0xFF87858F);
   static const LinearGradient mainGradient = LinearGradient(
-    begin: Alignment.topRight,
-    end: Alignment.bottomLeft,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: [Color(0xFF8924E7), Color(0xFF6A46F9)],
   );
 }

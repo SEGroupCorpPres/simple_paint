@@ -9,6 +9,7 @@ class ScaffoldBuilderWidget extends StatelessWidget {
     this.isHome = false,
     this.controller,
     this.appBarMainAxisAlignment,
+    this.bodyMainAxisAlignment = MainAxisAlignment.start,
   });
 
   final List<Widget> bodyChildren;
@@ -17,11 +18,11 @@ class ScaffoldBuilderWidget extends StatelessWidget {
   final bool? isHome;
   final ScrollController? controller;
   final MainAxisAlignment? appBarMainAxisAlignment;
+  final MainAxisAlignment? bodyMainAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) => false,
@@ -38,12 +39,16 @@ class ScaffoldBuilderWidget extends StatelessWidget {
               ),
             ),
             Positioned(
-              bottom: -150,
+              bottom: -200,
               child: BackdropFilter(
-                blendMode: BlendMode.srcOver,
+                blendMode: BlendMode.color,
+                enabled: false,
                 filter: ImageFilter.blur(
                   sigmaX: MediaQuery.sizeOf(context).width,
-                  sigmaY: MediaQuery.sizeOf(context).width,
+                  sigmaY:
+                      MediaQuery.sizeOf(context).height -
+                      MediaQuery.of(context).padding.top -
+                      kToolbarHeight,
                 ),
                 child: Container(
                   width: size.width,
@@ -61,24 +66,25 @@ class ScaffoldBuilderWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Container(
+                if(isHome!)  Container(
                   height: MediaQuery.of(context).padding.top + kToolbarHeight,
+                  width: size.width,
                   decoration: BoxDecoration(
-                    color: Color(0xFFC4C4C4).withValues(alpha: .1),
+                    color: Color(0xC4C4C4).withValues(alpha: .01),
                     borderRadius: BorderRadius.vertical(bottom: Radius.circular(8.r)),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xFFE3E3E3).withValues(alpha: .2),
-                        blurRadius: 40,
-                        spreadRadius: 0,
-                        offset: Offset(0, 1.h),
-                        blurStyle: BlurStyle.inner,
-                      ),
-                      BoxShadow(
-                        color: Color(0xFF604490).withValues(alpha: .3),
+                        color: Color(0x604490).withValues(alpha: .3),
                         blurRadius: 68,
                         spreadRadius: -64,
                         offset: Offset(0, -82.h),
+                        blurStyle: BlurStyle.inner,
+                      ),
+                      BoxShadow(
+                        color: Color(0xE3E3E3).withValues(alpha: .2),
+                        blurRadius: 40,
+                        spreadRadius: 0,
+                        offset: Offset(0, 1),
                         blurStyle: BlurStyle.inner,
                       ),
                     ],
@@ -90,7 +96,11 @@ class ScaffoldBuilderWidget extends StatelessWidget {
                     children: appBarChildren,
                   ),
                 ),
-                Column(children: bodyChildren),
+                SizedBox(
+                  height: isHome! ? null: size.height,
+                  width: size.width,
+                  child: Column(mainAxisAlignment: bodyMainAxisAlignment!, children: bodyChildren),
+                ),
               ],
             ),
           ],

@@ -2,7 +2,7 @@ import 'package:simple_paint/core/errors/errors.dart';
 
 abstract class Failure extends Equatable {
   final String message;
-  final int? code;
+  final String? code;
 
   const Failure(this.message, [this.code]);
 
@@ -27,13 +27,13 @@ class ValidationFailure extends Failure {
 }
 
 class UnauthorizedFailure extends Failure {
-  const UnauthorizedFailure(String message) : super(message, 401);
+  const UnauthorizedFailure(String message) : super(message, '401');
 }
 
 class ForbiddenFailure extends Failure {
-  const ForbiddenFailure(String message) : super(message, 403);
+  const ForbiddenFailure(String message) : super(message, '403');
 }
 
 class NotFoundFailure extends Failure {
-  const NotFoundFailure(String message) : super(message, 404);
+  const NotFoundFailure(String message) : super(message, '404');
 }

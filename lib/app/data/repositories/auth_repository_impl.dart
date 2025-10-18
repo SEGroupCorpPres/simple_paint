@@ -2,9 +2,10 @@ import 'package:simple_paint/app/data/data.dart';
 import 'package:simple_paint/core/core.dart';
 
 class AuthRepositoryImp implements AuthRepository {
-  const AuthRepositoryImp(this._authRemoteDataSource);
+  const AuthRepositoryImp(this._authRemoteDataSource, this._localDataSource);
 
   final AuthRemoteDataSource _authRemoteDataSource;
+  final AuthLocalDataSource _localDataSource;
 
   @override
   ResultFuture<LocalUser> signIn({required String email, required String password}) async {
@@ -37,6 +38,26 @@ class AuthRepositoryImp implements AuthRepository {
       return const Right(null);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message, e.code));
+    }
+  }
+
+  @override
+  ResultFuture<void> cacheFirstTimer() async {
+    try {
+      await _localDataSource.cacheFirstTimer();
+      return const Right(null);
+    } on CacheException catch (e) {
+      return Left(CacheFailure(e.message));
+    }
+  }
+
+  @override
+  ResultFuture<bool> checkIfUserIsFirstTimer() async {
+    try {
+      final result = await _localDataSource.checkIfUserIsFirstTimer();
+      return Right(result);
+    } on CacheException catch (e) {
+      return Left(CacheFailure(e.message));
     }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:simple_paint/app/app_barrels.dart';
-import 'package:simple_paint/core/common/widgets/build_app_screen_annotated_region_builder.dart';
 import 'package:simple_paint/core/core.dart';
 
 class MyApp extends StatefulWidget {
@@ -9,13 +8,16 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
+final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
+
   @override
   Widget build(BuildContext context) {
     final AuthBloc authBloc = sl<AuthBloc>();
@@ -35,7 +37,9 @@ class _MyAppState extends State<MyApp> {
         child: BlocBuilder<LanguageCubit, LanguageState>(
           builder: (context, state) {
             return MaterialApp.router(
+              builder: FToastBuilder(),
               debugShowCheckedModeBanner: true,
+              scaffoldMessengerKey: rootScaffoldMessengerKey,
               locale: context.locale,
               supportedLocales: context.supportedLocales,
               localizationsDelegates: context.localizationDelegates,

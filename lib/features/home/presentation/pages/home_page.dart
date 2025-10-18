@@ -1,5 +1,7 @@
+import 'package:simple_paint/app/app_barrels.dart';
 import 'package:simple_paint/core/core.dart';
 import 'package:simple_paint/features/home/home.dart';
+import 'package:simple_paint/core/common/widgets/main_btn.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,9 +17,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
-    // isBlank = false;
+    isBlank = false;
     return Material(
       child: ScaffoldBuilderWidget(
+        isHome: true,
         controller: _scrollController,
         appBarChildren: [
           InkWell(
@@ -26,7 +29,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               fit: BoxFit.fitWidth,
               width: AppSizes.defaultIconSize.sp,
             ),
-            onTap: () {},
+            onTap: () {
+              context.read<AuthBloc>().add(AuthSignOutEvent());
+            },
           ),
           Text(AppConstants.homePageGallery.tr(), style: Theme.of(context).textTheme.titleLarge),
           !isBlank
@@ -35,7 +40,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     Assets.iconsBoldPaintRoller,
                     width: AppSizes.defaultIconSize.sp,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    context.push(RouterNames.paint, extra: {'id': null, 'isEdit': false});
+                  },
                 )
               : InkWell(child: Container(width: AppSizes.defaultIconSize.sp)),
         ],
@@ -47,20 +54,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       SafeArea(
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: AppSizes.defaultHomeScreenHorizontalPadding.w,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: AppColors.mainGradient,
-                            borderRadius: BorderRadius.circular(AppSizes.defaultBorderRadius.r),
-                          ),
-                          width: size.width,
-                          child: TextButton(
-                            onPressed: () {},
-                            style: Theme.of(context).textButtonTheme.style,
-                            child: Text(AppConstants.homePageCreate.tr()),
-                          ),
+                        child: MainBtn(
+                          size: size,
+                          title: AppConstants.homePageCreate,
+                          onPressed: () {
+                            context.push(RouterNames.paint, extra: {'id': null, 'isEdit': false});
+                          },
                         ),
                       ),
                     ],

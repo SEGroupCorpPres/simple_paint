@@ -28,10 +28,10 @@ class AppRouter {
   AppRouter({required this.authBloc}) {
     router = GoRouter(
       navigatorKey: _rootNavigatorKey,
-      // initialLocation: '/login',
-      // initialLocation: '/registration',
-      initialLocation: RouterNames.home,
-      // initialLocation: '/paint',
+      initialLocation: RouterNames.login,
+      // initialLocation: RouterNames.register,
+      // initialLocation: RouterNames.home,
+      // initialLocation: RouterNames.paint,
       redirect: _redirect,
       refreshListenable: GoRouterRefreshStream(authBloc.stream),
       routes: [
@@ -42,8 +42,8 @@ class AppRouter {
         GoRoute(
           path: RouterNames.paint,
           pageBuilder: (context, state) {
-            final String id = (state.extra as Map?)?['id'];
-            final bool isEdit = (state.extra as Map?)?['isEdit'];
+            final String? id = (state.extra as Map?)?['id'];
+            final bool isEdit = (state.extra as Map?)?['isEdit'] ?? false;
             return _defaultPageBuilder(AddEditPaintPage(id: id, isEdit: isEdit), state);
           },
         ),
@@ -78,7 +78,8 @@ class AppRouter {
       return '/home';
     }
     //
-    if (authState is AuthErrorState) {
+
+    if (authState is AuthErrorState || authState is AuthSignedOutState) {
       // Xatolik bo'lsa login sahifaga
       return '/login';
     }

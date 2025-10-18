@@ -1,5 +1,5 @@
-import 'package:simple_paint/core/core.dart';
 import 'package:simple_paint/app/app_barrels.dart';
+import 'package:simple_paint/core/core.dart';
 
 final sl = GetIt.instance;
 
@@ -11,11 +11,21 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<LanguageCubit>(() => LanguageCubit());
   sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
   sl
-    ..registerFactory(() => AuthBloc(signIn: sl(), signUp: sl(), signOut: sl()))
+    ..registerFactory(
+      () => AuthBloc(
+        signIn: sl(),
+        signUp: sl(),
+        signOut: sl(),
+        cacheFirstTimer: sl(),
+        checkIfUserIsFirstTimer: sl(),
+      ),
+    )
     ..registerLazySingleton(() => SignIn(sl()))
     ..registerLazySingleton(() => SignUp(sl()))
     ..registerLazySingleton(() => SignOut(sl()))
-    ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImp(sl()))
+    ..registerLazySingleton(() => CacheFirstTimer(sl()))
+    ..registerLazySingleton(() => CheckIfUserIsFirstTimer(sl()))
+    ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImp(sl(), sl()))
     ..registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(
         firebaseAuth: sl(),
@@ -23,6 +33,7 @@ Future<void> initializeDependencies() async {
         firebaseStorage: sl(),
       ),
     )
+    ..registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSourceImp(sl()))
     ..registerLazySingleton(() => FirebaseAuth.instance)
     ..registerLazySingleton(() => FirebaseFirestore.instance)
     ..registerLazySingleton(() => FirebaseStorage.instance);

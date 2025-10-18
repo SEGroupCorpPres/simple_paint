@@ -8,8 +8,8 @@ class LoadingView extends StatelessWidget {
     return Material(
       type: MaterialType.transparency,
       child: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(context.theme.colorScheme.secondary),
+        child: CircularProgressIndicator.adaptive(
+          valueColor: AlwaysStoppedAnimation<Color>(context.theme.primaryColor),
         ),
       ),
     );
