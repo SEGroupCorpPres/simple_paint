@@ -22,24 +22,24 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    for (var controller in [
-      nameController,
-      emilController,
-      passwordController,
-      confirmPasswordController,
-    ]) {
-      controller.addListener(listener);
-    }
+    // for (var controller in [
+    //   nameController,
+    //   emilController,
+    //   passwordController,
+    //   confirmPasswordController,
+    // ]) {
+    //   controller.addListener(listener);
+    // }
   }
 
-  void listener() {
-    setState(() {
-      log('listener');
-      isIgnoring = nameController.text.isEmpty ? ValueNotifier(true) : ValueNotifier(false);
-      titleColor = nameController.text.isEmpty ? AppColors.secondaryColor : AppColors.mainTextColor;
-      bgColor = nameController.text.isEmpty ? AppColors.secondaryColor : null;
-    });
-  }
+  // void listener() {
+  //   setState(() {
+  //     log('listener');
+  //     isIgnoring = nameController.text.isEmpty ? ValueNotifier(true) : ValueNotifier(false);
+  //     titleColor = nameController.text.isEmpty ? AppColors.secondaryColor : AppColors.mainTextColor;
+  //     bgColor = nameController.text.isEmpty ? AppColors.secondaryColor : null;
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -59,13 +59,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
         listener: (context, state) {
           if (state is AuthSignedUpState) {
             Fluttertoast.showToast(
-                msg: AppConstants.authPageRegisterSuccess.tr(),
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.SNACKBAR,
-                timeInSecForIosWeb: 1,
-                backgroundColor: CupertinoColors.systemGreen,
-                textColor: Colors.white,
-                fontSize: 16.0
+              msg: AppConstants.authPageRegisterSuccess.tr(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.SNACKBAR,
+              timeInSecForIosWeb: 1,
+              backgroundColor: CupertinoColors.systemGreen,
+              textColor: Colors.white,
+              fontSize: 16.0,
             );
             Future.delayed(const Duration(seconds: 1), () {
               if (context.mounted) {
@@ -78,13 +78,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
           }
           if (state is AuthErrorState) {
             Fluttertoast.showToast(
-                msg: state.message,
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.SNACKBAR,
-                timeInSecForIosWeb: 1,
-                backgroundColor: CupertinoColors.destructiveRed,
-                textColor: Colors.white,
-                fontSize: 16.0
+              msg: state.message,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.SNACKBAR,
+              timeInSecForIosWeb: 10,
+              backgroundColor: CupertinoColors.destructiveRed,
+              textColor: Colors.white,
+              fontSize: 16.0,
             );
           }
         },
@@ -124,7 +124,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       hintText: AppConstants.authPageFormPasswordHelperText,
                       keyboardType: TextInputType.text,
                       obscureText: true,
+                      validator: (value) {
+                        if (value!.isEmpty || value.length < 6 || value.length > 16) {
+                          return 'Password must be between 6 and 16 characters';
+                        }
+                      },
                     ),
+
                     AuthTextField(
                       controller: confirmPasswordController,
                       labelText: AppConstants.authPageFormConfirmPasswordLabel,
@@ -143,8 +149,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   MainBtn(
                     onPressed: () {
                       print('register');
-                      print(_formKey.currentState!.validate() &&
-                          passwordController == confirmPasswordController);
+                      print(
+                        _formKey.currentState!.validate() &&
+                            passwordController == confirmPasswordController,
+                      );
                       if (_formKey.currentState!.validate() &&
                           passwordController.text == confirmPasswordController.text) {
                         print('register validate');

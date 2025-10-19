@@ -35,34 +35,42 @@ class _LoginPageState extends State<LoginPage> {
     return Material(
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
+          log('<---------  check user -------->');
+          log(state.toString());
+          log('<---------  check user -------->');
+
           if (state is AuthSignedInState) {
             Fluttertoast.showToast(
-                msg: AppConstants.authPageLoginSuccess.tr(),
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.SNACKBAR,
-                timeInSecForIosWeb: 1,
-                backgroundColor: CupertinoColors.systemGreen,
-                textColor: Colors.white,
-                fontSize: 16.0
+              msg: AppConstants.authPageLoginSuccess.tr(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.SNACKBAR,
+              timeInSecForIosWeb: 1,
+              backgroundColor: CupertinoColors.systemGreen,
+              textColor: Colors.white,
+              fontSize: 16.0,
             );
-            Future.delayed(const Duration(seconds: 1), () {
-              if (context.mounted) {
-                context.push(RouterNames.home);
-              }
-            });
+            log('<---------  user cached -------->');
+
+            context.read<AuthBloc>().add(CacheFirstTimerEvent());
+            context.go(RouterNames.home);
+            log('<---------  user cached -------->');
           }
           if (state is AuthLoadingState) {
             LoadingView();
           }
           if (state is AuthErrorState) {
+            log('<---------  user error -------->');
+            log(state.message);
+            log('<---------  user error -------->');
+
             Fluttertoast.showToast(
-                msg: state.message,
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.SNACKBAR,
-                timeInSecForIosWeb: 1,
-                backgroundColor: CupertinoColors.destructiveRed,
-                textColor: Colors.white,
-                fontSize: 16.0
+              msg: state.message,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.SNACKBAR,
+              timeInSecForIosWeb: 1,
+              backgroundColor: CupertinoColors.destructiveRed,
+              textColor: Colors.white,
+              fontSize: 16.0,
             );
           }
         },

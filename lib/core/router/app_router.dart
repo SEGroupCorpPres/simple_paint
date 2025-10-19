@@ -65,23 +65,44 @@ class AppRouter {
 
   // static GoRouter goRouter
   String? _redirect(BuildContext context, GoRouterState state) {
-    final authState = authBloc.state; // context.read o'rniga to'g'ridan-to'g'ri authBloc
+    final authState = sl<AuthBloc>().state; // context.read o'rniga to'g'ridan-to'g'ri authBloc
     final currentLocation = state.matchedLocation;
-
+    final user = sl<FirebaseAuth>().currentUser;
+    print('redirect');
+    logger.log(Level.info, authState);
+    log(user.toString());
     // Auth tekshiruvi boshlang'ich holatda bo'lsa, splash da qoladi
-    if (authState is AuthInitialState || authState is AuthLoadingState) {
+    if (state is AuthInitialState || state is AuthLoadingState) {
       return null; // splash da qolish
+    }
+    if (user != null) {
+      return RouterNames.home;
+    }
+    if (user == null) {
+      return RouterNames.login;
     }
     //
     //   // Auth state ga qarab yo'naltirish
-    if (authState is AuthSignedInState) {
-      return '/home';
+    if (state is UserCached) {
+      log('redirect to home');
+      return RouterNames.home;
     }
     //
+    if (state is AuthStatus) {
+      if (state is AuthSignedOutState) {
+        log('redirect to login');
+        return RouterNames.login;
+      } else {
+        log('redirect to home');
+        return RouterNames.home;
+      }
+    }
 
-    if (authState is AuthErrorState || authState is AuthSignedOutState) {
+    if (state is AuthErrorState || state is AuthSignedOutState || state is AuthSignedUpState) {
+      log('redirect to login via error');
+
       // Xatolik bo'lsa login sahifaga
-      return '/login';
+      return RouterNames.login;
     }
     return null; // redirect yo'q
   }

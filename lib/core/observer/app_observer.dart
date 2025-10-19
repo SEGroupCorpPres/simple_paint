@@ -37,7 +37,7 @@ class AppBlocObserver extends BlocObserver {
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
     if (kDebugMode) {
-      logger.v('📝 Change | Bloc: $bloc\n➡️ $change');
+      logger.i('📝 Change | Bloc: $bloc\n➡️ $change');
     }
   }
 
@@ -53,7 +53,7 @@ class AppBlocObserver extends BlocObserver {
   void onCreate(BlocBase bloc) {
     super.onCreate(bloc);
     if (kDebugMode) {
-      logger.wtf('✨ Created Bloc: $bloc');
+      logger.i('✨ Created Bloc: $bloc');
     }
   }
 

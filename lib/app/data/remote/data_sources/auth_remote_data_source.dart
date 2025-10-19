@@ -33,14 +33,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       final user = userCredential.user;
       if (user == null) {
-        throw const ServerException('Please try again later', 505);
+        throw const ServerException('Please try again later', '505');
       }
       var userData = await _getUserData(user.uid);
       if (userData.exists) {
         return LocalUserModel.fromMap(userData.data()!);
       }
-
-      await _setUserData(user, email);
       userData = await _getUserData(user.uid);
       return LocalUserModel.fromMap(userData.data()!);
     } on FirebaseAuthException catch (e) {
@@ -64,8 +62,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         email: email,
         password: password,
       );
+
       await userCredential.user?.updateDisplayName(fullName);
-      await _setUserData(_firebaseAuth.currentUser!, email);
+      userCredential.user!.reload();
+      await _setUserData(_firebaseAuth.currentUser!, email).catchError((value) {
+        log(value.toString());
+      });
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? 'Error Occurred', e.code);
     } catch (e, s) {

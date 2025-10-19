@@ -7,8 +7,9 @@ class SignIn extends UseCaseWithParams<void, SignInParams> {
   final AuthRepository _authRepository;
 
   @override
-  ResultFuture<LocalUser> call(SignInParams params) =>
-      _authRepository.signIn(email: params.email, password: params.password);
+  ResultFuture<LocalUser> call(SignInParams params) {
+   return _authRepository.signIn(email: params.email, password: params.password);
+  }
 }
 
 class SignInParams extends Equatable {

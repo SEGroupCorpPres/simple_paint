@@ -27,7 +27,7 @@ Future<void> main() async {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => sl<LanguageCubit>()),
-          BlocProvider(create: (context) => sl<AuthBloc>()..add(AuthSignOutEvent())),
+          BlocProvider(create: (context) => sl<AuthBloc>()..add(CheckIfUserIsFirstTimerEvent())),
         ],
         child: MyApp(),
       ),

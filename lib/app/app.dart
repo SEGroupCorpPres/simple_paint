@@ -12,10 +12,14 @@ final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
 
 class _MyAppState extends State<MyApp> {
+  AuthBloc authBloc = sl<AuthBloc>();
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
   }
 
   @override

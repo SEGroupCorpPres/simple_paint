@@ -1,2 +1,2 @@
 //GENERATED BARREL FILE 
-export 'pain_model.dart'; 
+export 'paint_model.dart';

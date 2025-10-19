@@ -31,8 +31,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final CheckIfUserIsFirstTimer _checkIfUserIsFirstTimer;
 
   Future<void> _signInHandler(AuthSignInEvent event, Emitter<AuthState> emit) async {
-    final result = await _signIn(SignInParams(email: event.email, password: event.password));
     emit(const AuthLoadingState());
+    final result = await _signIn(SignInParams(email: event.email, password: event.password));
 
     result.fold(
       (failure) => emit(AuthErrorState(message: failure.message)),
@@ -42,7 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _signUpHandler(AuthSignUpEvent event, Emitter<AuthState> emit) async {
     final result = await _signUp(
-      SignUpParams(email: event.email, password: event.password, fullName: ''),
+      SignUpParams(email: event.email, password: event.password, fullName: event.name),
     );
     emit(const AuthLoadingState());
 

@@ -10,6 +10,7 @@ class AuthRepositoryImp implements AuthRepository {
   @override
   ResultFuture<LocalUser> signIn({required String email, required String password}) async {
     try {
+
       final user = await _authRemoteDataSource.signIn(email: email, password: password);
       return Right(user);
     } on ServerException catch (e) {
@@ -27,7 +28,7 @@ class AuthRepositoryImp implements AuthRepository {
       await _authRemoteDataSource.signUp(email: email, fullName: fullName, password: password);
       return const Right(null);
     } on ServerException catch (e) {
-      return Left(ServerFailure(e.message, e.code));
+      return Left(ServerFailure(e.message, e.code.toString()));
     }
   }
 
@@ -37,7 +38,7 @@ class AuthRepositoryImp implements AuthRepository {
       await _authRemoteDataSource.signOut();
       return const Right(null);
     } on ServerException catch (e) {
-      return Left(ServerFailure(e.message, e.code));
+      return Left(ServerFailure(e.message, e.code.toString()));
     }
   }
 

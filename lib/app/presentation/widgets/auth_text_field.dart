@@ -8,6 +8,7 @@ class AuthTextField extends StatelessWidget {
     required this.labelText,
     this.obscureText = false,
     required this.keyboardType,
+    this.validator,
   });
 
   final TextEditingController controller;
@@ -15,6 +16,7 @@ class AuthTextField extends StatelessWidget {
   final String labelText;
   final bool? obscureText;
   final TextInputType keyboardType;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +42,16 @@ class AuthTextField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            labelText.tr(),
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
+          Text(labelText.tr(), style: Theme.of(context).textTheme.labelSmall),
           TextFormField(
+            // onChanged: (value){
+            //   print(value);
+            // },
+            controller: controller,
             keyboardType: keyboardType,
             obscureText: obscureText!,
             style: Theme.of(context).textTheme.labelSmall,
+            validator: validator,
             decoration: InputDecoration(hintText: hintText.tr()),
           ),
         ],
