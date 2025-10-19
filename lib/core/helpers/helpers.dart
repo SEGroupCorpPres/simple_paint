@@ -1,2 +1,2 @@
 //GENERATED BARREL FILE 
-export 'package:simple_paint/core/core.dart';
+export 'image_picker.dart';

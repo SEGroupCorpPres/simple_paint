@@ -19,8 +19,10 @@ dependencies:
 #  painting
   flutter_painter_v2: ^2.1.0+1
   flutter_colorpicker: ^1.1.0
+  flex_color_picker: ^3.7.1
   gradient_borders: ^1.0.2
-  fluttertoast:
+  toastification: ^3.0.3
+  oktoast: ^3.4.0
 # state management
   flutter_bloc: ^9.1.1
   provider: ^6.1.5
@@ -28,14 +30,16 @@ dependencies:
   #  local notification
   flutter_local_notifications: ^19.4.2
 #  firebase
+  dio:
   firebase_core: ^2.27.0
-  firebase_messaging: ^14.7.16
   firebase_auth: ^4.17.5
   firebase_storage: ^11.6.6
   cloud_firestore: ^4.15.5
 
 #  image & camera
   image_picker: ^1.2.0
+  image_gallery_saver_plus: ^4.0.1
+  flutter_image_compress: ^2.3.0
 
   #  local storage
   shared_preferences: ^2.5.3
@@ -203,8 +207,6 @@ flutter_native_splash:
   image_dark_android: assets/images/main_bg_shader.png
   image_ios: assets/images/main_bg_shader.png
   image_dark_ios: assets/images/main_bg_shader.png
-  #image_web: assets/splash-web.gif
-  #image_dark_web: assets/splash-invert-web.gif
   background_image_android: assets/images/main_bg.jpg
   background_image_dark_android: assets/images/main_bg.jpg
   background_image_ios: assets/images/main_bg.jpg

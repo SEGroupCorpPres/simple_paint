@@ -9,11 +9,16 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+  final ScrollController scrollController = ScrollController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emilController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  late FocusNode passwordFocusNode;
+  late FocusNode emailFocusNode;
+  late FocusNode nameFocusNode;
+  late FocusNode confirmPasswordFocusNode;
   ValueListenable<bool> isIgnoring = ValueNotifier(true);
   late Color titleColor = AppColors.secondaryTextColor;
   late Color? bgColor = AppColors.secondaryColor;
@@ -22,6 +27,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    passwordFocusNode = FocusNode();
+    emailFocusNode = FocusNode();
+    nameFocusNode = FocusNode();
+    confirmPasswordFocusNode = FocusNode();
+    for (final node in [
+      nameFocusNode,
+      emailFocusNode,
+      passwordFocusNode,
+      confirmPasswordFocusNode,
+    ]) {
+      node.addListener(() {
+        if (node.hasFocus) {
+          _scrollToFocusedField(node);
+        }
+      });
+    }
     // for (var controller in [
     //   nameController,
     //   emilController,
@@ -30,6 +51,19 @@ class _RegistrationPageState extends State<RegistrationPage> {
     // ]) {
     //   controller.addListener(listener);
     // }
+  }
+
+  void _scrollToFocusedField(FocusNode node) {
+    // 🔹 Keyboard paydo bo‘lganda fokuslangan maydonni ko‘rsatish uchun animatsion scroll
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (!scrollController.hasClients) return;
+
+      scrollController.animateTo(
+        scrollController.offset + 150,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   // void listener() {
@@ -43,12 +77,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
+    scrollController.dispose();
+    passwordFocusNode.dispose();
+    emailFocusNode.dispose();
+    nameFocusNode.dispose();
+    confirmPasswordFocusNode.dispose();
     nameController.dispose();
     emilController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -58,14 +96,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSignedUpState) {
-            Fluttertoast.showToast(
-              msg: AppConstants.authPageRegisterSuccess.tr(),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.SNACKBAR,
-              timeInSecForIosWeb: 1,
-              backgroundColor: CupertinoColors.systemGreen,
-              textColor: Colors.white,
-              fontSize: 16.0,
+
+            toastification.show(
+              context: context,
+              style: ToastificationStyle.fillColored,
+              title: const Text('Success'),
+              description: const Text('Auth Signed Up Successfully'),
+              type: ToastificationType.success,
+              autoCloseDuration: const Duration(seconds: 3),
             );
             Future.delayed(const Duration(seconds: 1), () {
               if (context.mounted) {
@@ -74,102 +112,117 @@ class _RegistrationPageState extends State<RegistrationPage> {
             });
           }
           if (state is AuthLoadingState) {
-            LoadingView();
+            showDialog(
+              context: context,
+              builder: (context) => const SimpleDialog(
+                children: [Center(child: CircularProgressIndicator.adaptive())],
+              ),
+            );
           }
           if (state is AuthErrorState) {
-            Fluttertoast.showToast(
-              msg: state.message,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.SNACKBAR,
-              timeInSecForIosWeb: 10,
-              backgroundColor: CupertinoColors.destructiveRed,
-              textColor: Colors.white,
-              fontSize: 16.0,
+            toastification.show(
+              context: context,
+              style: ToastificationStyle.fillColored,
+              title: const Text('Error'),
+              description: Text(state.message),
+              type: ToastificationType.error,
+              autoCloseDuration: const Duration(seconds: 3),
             );
           }
         },
         child: ScaffoldBuilderWidget(
           isHome: false,
-          bodyMainAxisAlignment: MainAxisAlignment.spaceBetween,
+          bodyMainAxisAlignment: MainAxisAlignment.center,
           appBarChildren: [],
           bodyChildren: [
-            SizedBox(height: 100.h),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSizes.defaultAuthScreenHorizontalPadding.w,
-              ),
-              child: Form(
-                key: _formKey,
-
+            Spacer(),
+            SizedBox(
+              height: (AppSizes.defaultFormInputHeight.h + AppSizes.defaultFormGap.h) * 4 + 50.h,
+              child: SingleChildScrollView(
+                controller: scrollController,
                 child: Column(
-                  spacing: AppSizes.defaultFormGap,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AuthBodyTitle(title: AppConstants.authPageRegistration),
-                    AuthTextField(
-                      controller: nameController,
-                      labelText: AppConstants.authPageFormNameLabel,
-                      hintText: AppConstants.authPageFormNameHelperText,
-                      keyboardType: TextInputType.text,
-                    ),
-                    AuthTextField(
-                      controller: emilController,
-                      labelText: AppConstants.authPageFormEmailLabel,
-                      hintText: AppConstants.authPageFormEmailHelperText,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    AuthTextField(
-                      controller: passwordController,
-                      labelText: AppConstants.authPageFormPasswordLabel,
-                      hintText: AppConstants.authPageFormPasswordHelperText,
-                      keyboardType: TextInputType.text,
-                      obscureText: true,
-                      validator: (value) {
-                        if (value!.isEmpty || value.length < 6 || value.length > 16) {
-                          return 'Password must be between 6 and 16 characters';
-                        }
-                      },
-                    ),
-
-                    AuthTextField(
-                      controller: confirmPasswordController,
-                      labelText: AppConstants.authPageFormConfirmPasswordLabel,
-                      hintText: AppConstants.authPageFormConfirmPasswordHelperText,
-                      keyboardType: TextInputType.text,
-                      obscureText: true,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.defaultAuthScreenHorizontalPadding.w,
+                      ),
+                      child: Form(
+                        autovalidateMode: AutovalidateMode.disabled,
+                        key: _formKey,
+                        child: Column(
+                          spacing: AppSizes.defaultFormGap,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AuthBodyTitle(title: AppConstants.authPageRegistration),
+                            AuthTextField(
+                              focusNode: nameFocusNode,
+                              controller: nameController,
+                              labelText: AppConstants.authPageFormNameLabel,
+                              hintText: AppConstants.authPageFormNameHelperText,
+                              keyboardType: TextInputType.text,
+                            ),
+                            AuthTextField(
+                              focusNode: emailFocusNode,
+                              controller: emilController,
+                              labelText: AppConstants.authPageFormEmailLabel,
+                              hintText: AppConstants.authPageFormEmailHelperText,
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            AuthTextField(
+                              focusNode: passwordFocusNode,
+                              controller: passwordController,
+                              labelText: AppConstants.authPageFormPasswordLabel,
+                              hintText: AppConstants.authPageFormPasswordHelperText,
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                              validator: (value) {
+                                if (value!.isEmpty || value.length < 6 || value.length > 16) {
+                                  return 'Password must be between 8 and 16 characters';
+                                }
+                              },
+                            ),
+                            AuthTextField(
+                              focusNode: confirmPasswordFocusNode,
+                              controller: confirmPasswordController,
+                              labelText: AppConstants.authPageFormConfirmPasswordLabel,
+                              hintText: AppConstants.authPageFormConfirmPasswordHelperText,
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
+            Spacer(),
             SafeArea(
-              child: Column(
-                spacing: AppSizes.defaultFormGap,
-                children: [
-                  MainBtn(
-                    onPressed: () {
-                      print('register');
-                      print(
-                        _formKey.currentState!.validate() &&
-                            passwordController == confirmPasswordController,
-                      );
-                      if (_formKey.currentState!.validate() &&
-                          passwordController.text == confirmPasswordController.text) {
-                        print('register validate');
-                        context.read<AuthBloc>().add(
-                          AuthSignUpEvent(
-                            name: nameController.text,
-                            email: emilController.text,
-                            password: passwordController.text,
-                          ),
-                        );
-                      }
-                    },
-                    isIgnoring: false,
-                    title: AppConstants.authPageRegistration,
-                    size: size,
-                  ),
-                ],
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 30.h),
+                child: Column(
+                  spacing: AppSizes.defaultFormGap,
+                  children: [
+                    MainBtn(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate() &&
+                            passwordController.text == confirmPasswordController.text) {
+                          context.read<AuthBloc>().add(
+                            AuthSignUpEvent(
+                              name: nameController.text,
+                              email: emilController.text,
+                              password: passwordController.text,
+                            ),
+                          );
+                        }
+                      },
+                      isIgnoring: false,
+                      title: AppConstants.authPageRegistration,
+                      size: size,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

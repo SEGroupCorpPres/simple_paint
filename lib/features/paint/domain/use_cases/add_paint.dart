@@ -1,13 +1,13 @@
 import 'package:simple_paint/core/core.dart';
 import 'package:simple_paint/features/paint/paint.dart';
 
-class AddPaint extends UseCaseWithParams<void, AddPaintParams> {
+class AddPaint extends UseCaseWithParams<bool, AddPaintParams> {
   final PaintRepository _repository;
 
   AddPaint(this._repository);
 
   @override
-  ResultFuture<void> call(AddPaintParams params) =>
+  ResultFuture<bool> call(AddPaintParams params) =>
       _repository.addPaint(paint: params.paint, image: params.image);
 }
 

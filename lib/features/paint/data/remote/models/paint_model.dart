@@ -3,19 +3,17 @@ import 'package:simple_paint/features/paint/paint.dart';
 
 class PaintModel extends PaintEntity {
   const PaintModel({
-    required super.id,
-    required super.uid,
-    required super.name,
-    required super.url,
+    required super.paintId,
+     super.uid,
+     super.url,
     required super.created,
     required super.updated,
   });
 
   PaintModel.fromMap(DataMap map)
     : super(
-        id: map['id'] as String,
+        paintId: map['id'] as String,
         uid: map['uid'] as String,
-        name: map['name'] as String,
         url: map['url'] as String,
         created: map['created'] as Timestamp,
         updated: map['updated'] as Timestamp,
@@ -30,19 +28,39 @@ class PaintModel extends PaintEntity {
     Timestamp? updated,
   }) {
     return PaintModel(
-      id: id ?? this.id,
+      paintId: id ?? this.paintId,
       uid: uid ?? this.uid,
-      name: name ?? this.name,
       url: url ?? this.url,
       created: created ?? this.created,
       updated: updated ?? this.updated,
     );
   }
 
+  factory PaintModel.fromEntity(PaintEntity entity) {
+    return PaintModel(
+      paintId: entity.paintId,
+      uid: entity.uid,
+      url: entity.url,
+      created: entity.created,
+      updated: entity.updated,
+    );
+  }
+
+  /// ✅ Model → Entity
+  PaintEntity toEntity() {
+    return PaintEntity(
+      paintId: paintId,
+      uid: uid,
+      url: url,
+      created: created,
+      updated: updated,
+    );
+  }
+
   DataMap toMap() {
-    return {'id': id, 'uid': uid, 'name': name, 'url': url, 'created': created, 'updated': updated};
+    return {'id': paintId, 'uid': uid, 'url': url, 'created': created, 'updated': updated};
   }
 
   PaintModel.empty()
-    : this(id: '', uid: '', name: '', url: '', created: Timestamp.now(), updated: Timestamp.now());
+    : this(paintId: '', uid: '',  url: '', created: Timestamp.now(), updated: Timestamp.now());
 }

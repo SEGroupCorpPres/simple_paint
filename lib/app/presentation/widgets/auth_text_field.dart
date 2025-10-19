@@ -8,7 +8,7 @@ class AuthTextField extends StatelessWidget {
     required this.labelText,
     this.obscureText = false,
     required this.keyboardType,
-    this.validator,
+    this.validator, required this.focusNode,
   });
 
   final TextEditingController controller;
@@ -17,6 +17,8 @@ class AuthTextField extends StatelessWidget {
   final bool? obscureText;
   final TextInputType keyboardType;
   final String? Function(String?)? validator;
+  final FocusNode focusNode;
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class AuthTextField extends StatelessWidget {
         children: [
           Text(labelText.tr(), style: Theme.of(context).textTheme.labelSmall),
           TextFormField(
+            focusNode: focusNode,
             // onChanged: (value){
             //   print(value);
             // },

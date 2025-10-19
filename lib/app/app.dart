@@ -14,12 +14,10 @@ final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
 class _MyAppState extends State<MyApp> {
   AuthBloc authBloc = sl<AuthBloc>();
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
   }
 
   @override
@@ -41,7 +39,15 @@ class _MyAppState extends State<MyApp> {
         child: BlocBuilder<LanguageCubit, LanguageState>(
           builder: (context, state) {
             return MaterialApp.router(
-              builder: FToastBuilder(),
+              builder: (BuildContext context, child) => ToastificationConfigProvider(
+                config: ToastificationConfig(
+                  alignment: Alignment.topCenter,
+                  itemWidth: 440,
+                  animationDuration: Duration(milliseconds: 500),
+                  blockBackgroundInteraction: false,
+                ),
+                child: child!,
+              ),
               debugShowCheckedModeBanner: true,
               scaffoldMessengerKey: rootScaffoldMessengerKey,
               locale: context.locale,

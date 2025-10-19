@@ -1,7 +1,5 @@
 import 'package:simple_paint/app/app_barrels.dart';
-import 'package:simple_paint/core/router/router.dart';
-import 'package:simple_paint/features/home/presentation/pages/home_page.dart';
-import 'package:simple_paint/features/paint/presentation/pages/add_edit_paint_page.dart';
+import 'package:simple_paint/features/features.dart';
 
 Page<dynamic> _defaultPageBuilder(Widget child, GoRouterState state) {
   return CustomTransitionPage(
@@ -68,24 +66,20 @@ class AppRouter {
     final authState = sl<AuthBloc>().state; // context.read o'rniga to'g'ridan-to'g'ri authBloc
     final currentLocation = state.matchedLocation;
     final user = sl<FirebaseAuth>().currentUser;
-    print('redirect');
     logger.log(Level.info, authState);
-    log(user.toString());
     // Auth tekshiruvi boshlang'ich holatda bo'lsa, splash da qoladi
     if (state is AuthInitialState || state is AuthLoadingState) {
       return null; // splash da qolish
     }
-    if (user != null) {
+    if (user != null && currentLocation == RouterNames.login) {
       return RouterNames.home;
     }
-    if (user == null) {
+    if ((state is CreatePaintState || state is UpdatePaintState || state is DeletePaintState) &&
+        currentLocation == RouterNames.home) {
+      return RouterNames.home;
+    }
+    if (user == null && currentLocation == RouterNames.home) {
       return RouterNames.login;
-    }
-    //
-    //   // Auth state ga qarab yo'naltirish
-    if (state is UserCached) {
-      log('redirect to home');
-      return RouterNames.home;
     }
     //
     if (state is AuthStatus) {
