@@ -10,7 +10,6 @@ class AuthRepositoryImp implements AuthRepository {
   @override
   ResultFuture<LocalUser> signIn({required String email, required String password}) async {
     try {
-
       final user = await _authRemoteDataSource.signIn(email: email, password: password);
       return Right(user);
     } on ServerException catch (e) {

@@ -1,5 +1,5 @@
 import 'package:simple_paint/app/app_barrels.dart';
-import 'package:simple_paint/core/core.dart';
+import 'package:simple_paint/features/features.dart';
 
 final sl = GetIt.instance;
 
@@ -37,6 +37,30 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton(() => FirebaseAuth.instance)
     ..registerLazySingleton(() => FirebaseFirestore.instance)
     ..registerLazySingleton(() => FirebaseStorage.instance);
+  sl
+    ..registerFactory<PaintBloc>(
+      () => PaintBloc(
+        addPaint: sl(),
+        editPaint: sl(),
+        removePaint: sl(),
+        getPaint: sl(),
+        getPaints: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => AddPaint(sl()))
+    ..registerLazySingleton(() => EditPaint(sl()))
+    ..registerLazySingleton(() => DeletePaint(sl()))
+    ..registerLazySingleton(() => GetPaint(sl()))
+    ..registerLazySingleton(() => GetPaintsList(sl()))
+    ..registerLazySingleton<PaintRepository>(() => PaintRepositoryImpl(sl(), sl()))
+    ..registerLazySingleton<PaintRemoteDataSource>(
+      () => PaintRemoteDataSourceImpl(
+        firebaseAuth: sl(),
+        firebaseFirestore: sl(),
+        firebaseStorage: sl(),
+      ),
+    )
+    ..registerLazySingleton<PaintLocalDataSource>(() => PaintLocalDataSourceImpl());
   final logger = Logger(
     printer: PrettyPrinter(
       methodCount: 0,

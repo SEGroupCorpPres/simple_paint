@@ -1,13 +1,13 @@
 import 'package:simple_paint/core/core.dart';
 import 'package:simple_paint/features/paint/paint.dart';
 
-class DeletePaint extends UseCaseWithParams<void, DeletePaintParams> {
+class DeletePaint extends UseCaseWithParams<bool, DeletePaintParams> {
   final PaintRepository _repository;
 
   DeletePaint(this._repository);
 
   @override
-  ResultFuture<void> call(DeletePaintParams params) {
+  ResultFuture<bool> call(DeletePaintParams params) {
     return _repository.deletePaint(id: params.id);
   }
 }

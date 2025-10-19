@@ -39,6 +39,29 @@ class PaintModel extends PaintEntity {
     );
   }
 
+  factory PaintModel.fromEntity(PaintEntity entity) {
+    return PaintModel(
+      id: entity.id,
+      uid: entity.uid,
+      name: entity.name,
+      url: entity.url,
+      created: entity.created,
+      updated: entity.updated,
+    );
+  }
+
+  /// ✅ Model → Entity
+  PaintEntity toEntity() {
+    return PaintEntity(
+      id: this.id,
+      uid: uid,
+      name: name,
+      url: url,
+      created: created,
+      updated: updated,
+    );
+  }
+
   DataMap toMap() {
     return {'id': id, 'uid': uid, 'name': name, 'url': url, 'created': created, 'updated': updated};
   }

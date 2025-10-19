@@ -12,7 +12,7 @@ abstract class PaintRemoteDataSource {
 
   Future<bool> deletePaint({required String paintId});
 
-  Future<bool> updatePaint({required PaintModel paint});
+  Future<bool> updatePaint({required PaintModel paint, required File? image, required String paintId});
 }
 
 class PaintRemoteDataSourceImpl implements PaintRemoteDataSource {
@@ -30,42 +30,43 @@ class PaintRemoteDataSourceImpl implements PaintRemoteDataSource {
 
   @override
   Future<bool> addPaint({required PaintModel paint, required File image}) async {
-    final uid = _firebaseAuth.currentUser!.uid;
+    final user = _firebaseAuth.currentUser;
+    if (user == null) throw FirebaseAuthException(code: 'NO_USER', message: 'User not logged in');
+    final uid = user.uid;
     try {
       final ref = _firebaseStorage.ref();
       final uploadTask = ref
           .child('paints/$uid/${paint.created.microsecondsSinceEpoch}')
           .putFile(image);
 
-      final snapshot = await uploadTask.whenComplete(() => null);
+      final snapshot = await uploadTask;
 
       final downloadUrl = await snapshot.ref.getDownloadURL();
       PaintModel paintModel = paint.copyWith(url: downloadUrl);
 
-      await _firebaseFirestore
-          .collection('paints')
-          .doc(paint.created.microsecondsSinceEpoch.toString() + uid.hashCode.toString())
-          .set(paintModel.toMap());
+      await _firebaseFirestore.collection('paints').add(paintModel.toMap());
       return true;
     } on FirebaseException catch (e) {
-      ServerException(e.message!, e.code);
-      rethrow;
+      throw ServerException(e.message ?? 'Unknown error', e.code);
     } catch (e) {
+      logger.e(e);
       rethrow;
     }
   }
 
   @override
   Future<bool> deletePaint({required String paintId}) async {
-    final uid = _firebaseAuth.currentUser!.uid;
+    final user = _firebaseAuth.currentUser;
+    if (user == null) throw FirebaseAuthException(code: 'NO_USER', message: 'User not logged in');
+    final uid = user.uid;
     try {
-      await _firebaseFirestore.collection('paints').doc(paintId).delete();
       await _firebaseStorage.ref('paints/$uid/$paintId').delete();
+      await _firebaseFirestore.collection('paints').doc(paintId).delete();
       return true;
     } on FirebaseException catch (e) {
-      ServerException(e.message!, e.code);
-      rethrow;
+      throw ServerException(e.message!, e.code);
     } catch (e) {
+      logger.e(e);
       rethrow;
     }
   }
@@ -76,16 +77,18 @@ class PaintRemoteDataSourceImpl implements PaintRemoteDataSource {
       final snapshot = await _firebaseFirestore.collection('paints').doc(paintId).get();
       return PaintModel.fromMap(snapshot.data()!);
     } on FirebaseException catch (e) {
-      ServerException(e.message!, e.code);
-      rethrow;
+      throw ServerException(e.message!, e.code);
     } catch (e) {
+      logger.e(e);
       rethrow;
     }
   }
 
   @override
   Future<List<PaintModel>> getPaintsList() {
-    final uid = _firebaseAuth.currentUser!.uid;
+    final user = _firebaseAuth.currentUser;
+    if (user == null) throw FirebaseAuthException(code: 'NO_USER', message: 'User not logged in');
+    final uid = user.uid;
     try {
       return _firebaseFirestore
           .collection('paints')
@@ -93,15 +96,19 @@ class PaintRemoteDataSourceImpl implements PaintRemoteDataSource {
           .get()
           .then((value) => value.docs.map((e) => PaintModel.fromMap(e.data())).toList());
     } on FirebaseException catch (e) {
-      ServerException(e.message!, e.code);
-      rethrow;
+      throw ServerException(e.message!, e.code);
     } catch (e) {
+      logger.e(e);
       rethrow;
     }
   }
 
   @override
-  Future<bool> updatePaint({required PaintModel paint}) async {
+  Future<bool> updatePaint({
+    required PaintModel paint,
+    required File? image,
+    required String paintId,
+  }) async {
     try {
       _firebaseFirestore
           .collection('paints')
@@ -109,9 +116,9 @@ class PaintRemoteDataSourceImpl implements PaintRemoteDataSource {
           .update(paint.toMap());
       return true;
     } on FirebaseException catch (e) {
-      ServerException(e.message!, e.code);
-      rethrow;
+      throw ServerException(e.message!, e.code);
     } catch (e) {
+      logger.e(e);
       rethrow;
     }
   }
