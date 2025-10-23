@@ -8,7 +8,7 @@ class DeletePaint extends UseCaseWithParams<bool, DeletePaintParams> {
 
   @override
   ResultFuture<bool> call(DeletePaintParams params) {
-    return _repository.deletePaint(id: params.id);
+    return _repository.deletePaintInLocalDB(id: params.id);
   }
 }
 

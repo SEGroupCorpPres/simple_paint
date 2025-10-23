@@ -27,10 +27,11 @@ Future<void> main() async {
       fallbackLocale: SupportedLocales.ru,
       child: MultiBlocProvider(
         providers: [
+          BlocProvider(create: (context) => sl<NetworkCubit>()),
           BlocProvider(create: (context) => sl<LanguageCubit>()),
           BlocProvider(create: (context) => sl<AuthBloc>()..add(CheckIfUserIsFirstTimerEvent())),
           BlocProvider(create: (context) => sl<PaintBloc>()..add(GetPaintsListEvent())),
-          BlocProvider(create: (context) => sl<ImageCubit>())
+          BlocProvider(create: (context) => sl<ImageCubit>()),
         ],
         child: MyApp(),
       ),

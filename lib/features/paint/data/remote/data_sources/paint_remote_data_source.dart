@@ -40,12 +40,12 @@ class PaintRemoteDataSourceImpl implements PaintRemoteDataSource {
     try {
       final ref = _firebaseStorage.ref();
       final uploadTask = ref
-          .child('paints/$uid/${paint.created.microsecondsSinceEpoch}')
+          .child('paints/$uid/${paint.created}')
           .putFile(image);
       final snapshot = await uploadTask;
 
       final downloadUrl = await snapshot.ref.getDownloadURL();
-      PaintModel paintModel = paint.copyWith(uid: uid, url: downloadUrl);
+      PaintModel paintModel = paint.copyWith(uid: uid, imageUrl: downloadUrl);
 
       await _firebaseFirestore.collection('paints').add(paintModel.toMap());
       return true;

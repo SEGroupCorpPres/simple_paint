@@ -33,8 +33,8 @@ class PaintBloc extends Bloc<PaintEvent, PaintState> {
   Future<void> _addPaintHandler(AddPaintEvent event, Emitter<PaintState> emit) async {
     emit(LoadingPaintState());
     final result = await _addPaint(AddPaintParams(event.image, paint: event.paint));
-    result.fold((failure) => emit(ErrorPaintState(error: failure.message)), (r) async{
-       emit(CreatePaintState());
+    result.fold((failure) => emit(ErrorPaintState(error: failure.message)), (r) async {
+      emit(CreatePaintState());
     });
   }
 

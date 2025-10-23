@@ -8,7 +8,7 @@ class GetPaint extends UseCaseWithParams<PaintEntity, GetPaintParams> {
 
   @override
   ResultFuture<PaintEntity> call(GetPaintParams params) =>
-      _repository.getPaint(id: params.id);
+      _repository.getPaintFromLocalDB(id: params.id);
 }
 
 class GetPaintParams extends Equatable {

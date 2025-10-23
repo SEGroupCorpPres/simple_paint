@@ -8,7 +8,7 @@ class AddPaint extends UseCaseWithParams<bool, AddPaintParams> {
 
   @override
   ResultFuture<bool> call(AddPaintParams params) =>
-      _repository.addPaint(paint: params.paint, image: params.image);
+      _repository.addPaintToLocalDB(paint: params.paint);
 }
 
 class AddPaintParams extends Equatable {

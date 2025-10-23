@@ -12,7 +12,17 @@ class PaintRepositoryImpl implements PaintRepository {
     try {
       PaintModel paintModel = PaintModel.fromEntity(paint);
       await _remoteDataSource.addPaint(paint: paintModel, image: image);
-      // final localResult = _localDataSource.addPaint(paint: paint, image: image);
+      return Right(true);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message, e.code.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<bool> addPaintToLocalDB({required PaintEntity paint}) async {
+    try {
+      PaintModel paintModel = PaintModel.fromEntity(paint);
+      await _localDataSource.insertPaint(paintModel);
       return Right(true);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message, e.code.toString()));
@@ -23,7 +33,16 @@ class PaintRepositoryImpl implements PaintRepository {
   ResultFuture<bool> deletePaint({required String id}) async {
     try {
       await _remoteDataSource.deletePaint(paintId: id);
-      // final localResult = _localDataSource.deletePaint(id: id);
+      return Right(true);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message, e.code.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<bool> deletePaintInLocalDB({required String id}) async {
+    try {
+      await _localDataSource.deletePaint(id);
       return Right(true);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message, e.code.toString()));
@@ -34,8 +53,17 @@ class PaintRepositoryImpl implements PaintRepository {
   ResultFuture<PaintEntity> getPaint({required String id}) async {
     try {
       final remoteResult = await _remoteDataSource.getPaint(paintId: id);
-      // final localResult = _localDataSource.getPaint(id: id);
       return Right(remoteResult);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message, e.code.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<PaintEntity> getPaintFromLocalDB({required String id}) async {
+    try {
+      final localResult = await _localDataSource.getPaint(id);
+      return Right(localResult!);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message, e.code.toString()));
     }
@@ -45,8 +73,17 @@ class PaintRepositoryImpl implements PaintRepository {
   ResultFuture<List<PaintEntity>?> getPaintsList() async {
     try {
       final remoteResult = await _remoteDataSource.getPaintsList();
-      // final localResult = _localDataSource.getPaintsList();
       return Right(remoteResult);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message, e.code.toString()));
+    }
+  }
+
+  @override
+  ResultFuture<List<PaintEntity>?> getPaintsListFromLocalDB() async {
+    try {
+      final localResult = await _localDataSource.getAllPaints();
+      return Right(localResult);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message, e.code.toString()));
     }
@@ -61,8 +98,18 @@ class PaintRepositoryImpl implements PaintRepository {
     try {
       PaintModel paintModel = PaintModel.fromEntity(paint);
       await _remoteDataSource.updatePaint(paint: paintModel, image: image, paintId: id);
+      return Right(true);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message, e.code.toString()));
+    }
+  }
 
-      // final localResult = _localDataSource.updatePaint(paint: paint);
+  @override
+  ResultFuture<bool> updatePaintInLocalDB({required PaintEntity paint, required String id}) async {
+    try {
+      PaintModel paintModel = PaintModel.fromEntity(paint);
+
+      await _localDataSource.updatePaint(paintModel);
       return Right(true);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message, e.code.toString()));

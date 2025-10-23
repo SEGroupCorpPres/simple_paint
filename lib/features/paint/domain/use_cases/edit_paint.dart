@@ -8,7 +8,7 @@ class EditPaint extends UseCaseWithParams<bool, EditPaintParams> {
 
   @override
   ResultFuture<bool> call(EditPaintParams params) =>
-      _repository.updatePaint(paint: params.paint, id: params.id, image: params.image);
+      _repository.updatePaintInLocalDB(paint: params.paint, id: params.id);
 }
 
 class EditPaintParams extends Equatable {

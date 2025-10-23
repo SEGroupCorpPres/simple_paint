@@ -1,7 +1,6 @@
 import 'dart:ui' as ui;
 
 import 'package:simple_paint/core/core.dart';
-import 'package:simple_paint/core/helpers/painter_image.dart';
 import 'package:simple_paint/features/paint/paint.dart';
 
 class AddEditPaintPage extends StatefulWidget {
@@ -24,7 +23,6 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
   PaintBloc bloc = sl<PaintBloc>();
   late double strokeWidth = 10;
   late PaintModel paintModel;
-
 
   List<Color> sortedColors() {
     final hexedColors = AppColors.hexColors;
@@ -61,7 +59,7 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
       controller.background = await PainterImage.fromNetwork(imgUrl);
     }
     if (file != null) {
-      final ui.Image myImage = await decodeImageFromList(file!.readAsBytesSync());
+      final ui.Image myImage = await decodeImageFromList(file.readAsBytesSync());
       controller.background = myImage.backgroundDrawable;
     }
     // Sets the background to the image
@@ -71,9 +69,11 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
     final File image = await PainterImage().renderAndSave(controller: controller, size: size);
     DateTime now = DateTime.now();
     PaintModel paint = PaintModel(
+      uid: '',
+      imageUrl: image.path,
       paintId: DateTime.now().microsecondsSinceEpoch.toString(),
-      created: Timestamp.fromDate(now),
-      updated: Timestamp.fromDate(now),
+      created: DateTime.now().toIso8601String(),
+      updated: DateTime.now().toIso8601String(),
     );
     bloc.add(AddPaintEvent(paint: paint, image: image));
   }
@@ -102,41 +102,7 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
     return Material(
       color: Colors.transparent,
       child: BlocConsumer<PaintBloc, PaintState>(
-        listener: (context, state) {
-          if (state is LoadingPaintState) {
-            showDialog(
-              fullscreenDialog: true,
-              context: context,
-              builder: (context) => Center(child: CircularProgressIndicator.adaptive()),
-            );
-          }
-          if (state is GetPaintState) {
-            paintModel = state.paint;
-            setBackground(null, paintModel.url);
-          }
-          if (state is ErrorPaintState) {
-            toastification.show(
-              context: context,
-              style: ToastificationStyle.fillColored,
-              title: const Text('Error'),
-              description: Text(state.error),
-              type: ToastificationType.success,
-              autoCloseDuration: const Duration(seconds: 3),
-            );
-          }
-          if (state is CreatePaintState || state is UpdatePaintState || state is DeletePaintState) {
-            toastification.show(
-              context: context,
-              style: ToastificationStyle.fillColored,
-
-              title: const Text('Success'),
-              description: const Text('Image saved successfully!'),
-              type: ToastificationType.success,
-              autoCloseDuration: const Duration(seconds: 3),
-            );
-            context.pop();
-          }
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           return ScaffoldBuilderWidget(
             isHome: true,
@@ -160,7 +126,10 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
               InkWell(
                 child: SvgPicture.asset(Assets.iconsCheck, width: AppSizes.defaultIconSize.sp),
                 onTap: () {
-                  saveImage(context, size);
+                  saveImage(context, size).then((value) {
+                    context.read<PaintBloc>().add(GetPaintsListEvent());
+                    context.pop();
+                  });
                 },
               ),
             ],
@@ -182,18 +151,15 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
                         // ),
                         PaintIconBtn(
                           onPressed: () async {
-                            PainterImage()
-                                .renderAndSave(controller: controller, size: size)
-                                .whenComplete(() {
-                                  toastification.show(
-                                    context: context,
-                                    style: ToastificationStyle.fillColored,
-                                    title: const Text('Success'),
-                                    description: const Text('Image saved successfully!'),
-                                    type: ToastificationType.success,
-                                    autoCloseDuration: const Duration(seconds: 3),
-                                  );
-                                });
+                            PainterImage().renderAndSave(controller: controller, size: size);
+                            toastification.show(
+                              context: context,
+                              style: ToastificationStyle.fillColored,
+                              title: const Text('Success'),
+                              description: const Text('Image saved successfully!'),
+                              type: ToastificationType.success,
+                              autoCloseDuration: const Duration(seconds: 3),
+                            );
                           },
                           svg: Assets.iconsDownloadMinimalistic,
                         ),

@@ -8,6 +8,6 @@ class GetPaintsList extends UseCaseWithoutParams<List<PaintEntity>?> {
 
   @override
   ResultFuture<List<PaintEntity>?> call() {
-    return _repository.getPaintsList();
+    return _repository.getPaintsListFromLocalDB();
   }
 }

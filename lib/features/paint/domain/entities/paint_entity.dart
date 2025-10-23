@@ -1,16 +1,16 @@
 import 'package:simple_paint/core/core.dart';
 
 class PaintEntity extends Equatable {
-  final String? url;
+  final String? imageUrl;
   final String paintId;
   final String? uid;
-  final Timestamp created;
-  final Timestamp updated;
+  final String created;
+  final String updated;
 
   const PaintEntity({
     required this.paintId,
     required this.uid,
-    required this.url,
+    required this.imageUrl,
     required this.created,
     required this.updated,
   });
@@ -22,5 +22,5 @@ class PaintEntity extends Equatable {
   }
   @override
   // TODO: implement props
-  List<Object?> get props => [paintId, uid,  url, created, updated];
+  List<Object?> get props => [paintId, uid,  imageUrl, created, updated];
 }

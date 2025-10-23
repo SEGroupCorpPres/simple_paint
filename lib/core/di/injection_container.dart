@@ -9,8 +9,13 @@ Future<void> initializeDependencies() async {
   // BLoC
 
   sl.registerFactory<LanguageCubit>(() => LanguageCubit());
-  sl.registerFactory<ImageCubit>(()=> ImageCubit());
+  sl.registerFactory<ImageCubit>(() => ImageCubit());
   sl.registerLazySingleton<SharedPreferences>(() => sharedPreferences);
+  sl
+    ..registerFactory<NetworkCubit>(() => NetworkCubit(sl()))
+    ..registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()))
+    ..registerLazySingleton<Connectivity>(() => Connectivity());
+
   sl
     ..registerFactory(
       () => AuthBloc(
@@ -61,7 +66,9 @@ Future<void> initializeDependencies() async {
         firebaseStorage: sl(),
       ),
     )
-    ..registerLazySingleton<PaintLocalDataSource>(() => PaintLocalDataSourceImpl());
+    ..registerLazySingleton<PaintLocalDataSource>(() => PaintLocalDataSourceImpl(sl()))
+    ..registerLazySingleton<DatabaseHelper>(() => DatabaseHelper.instance);
+
   final logger = Logger(
     printer: PrettyPrinter(
       methodCount: 0,

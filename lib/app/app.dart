@@ -1,4 +1,5 @@
 import 'package:simple_paint/app/app_barrels.dart';
+import 'package:simple_paint/core/common/widgets/network_aware.dart';
 import 'package:simple_paint/core/core.dart';
 
 class MyApp extends StatefulWidget {
@@ -48,7 +49,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 child: child!,
               ),
-              debugShowCheckedModeBanner: true,
+              // debugShowCheckedModeBanner: true,
               scaffoldMessengerKey: rootScaffoldMessengerKey,
               locale: context.locale,
               supportedLocales: context.supportedLocales,

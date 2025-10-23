@@ -4,33 +4,32 @@ import 'package:simple_paint/features/paint/paint.dart';
 class PaintModel extends PaintEntity {
   const PaintModel({
     required super.paintId,
-     super.uid,
-     super.url,
+    super.uid,
+    super.imageUrl,
     required super.created,
     required super.updated,
   });
 
   PaintModel.fromMap(DataMap map)
     : super(
-        paintId: map['id'] as String,
+        paintId: map['paintId'] as String,
         uid: map['uid'] as String,
-        url: map['url'] as String,
-        created: map['created'] as Timestamp,
-        updated: map['updated'] as Timestamp,
+        imageUrl: map['imageUrl'] as String,
+        created: map['created'] as String,
+        updated: map['updated'] as String,
       );
 
   PaintModel copyWith({
-    String? id,
+    String? paintId,
     String? uid,
-    String? name,
-    String? url,
-    Timestamp? created,
-    Timestamp? updated,
+    String? imageUrl,
+    String? created,
+    String? updated,
   }) {
     return PaintModel(
-      paintId: id ?? this.paintId,
+      paintId: paintId ?? this.paintId,
       uid: uid ?? this.uid,
-      url: url ?? this.url,
+      imageUrl: imageUrl ?? this.imageUrl,
       created: created ?? this.created,
       updated: updated ?? this.updated,
     );
@@ -40,7 +39,7 @@ class PaintModel extends PaintEntity {
     return PaintModel(
       paintId: entity.paintId,
       uid: entity.uid,
-      url: entity.url,
+      imageUrl: entity.imageUrl,
       created: entity.created,
       updated: entity.updated,
     );
@@ -51,16 +50,28 @@ class PaintModel extends PaintEntity {
     return PaintEntity(
       paintId: paintId,
       uid: uid,
-      url: url,
+      imageUrl: imageUrl,
       created: created,
       updated: updated,
     );
   }
 
   DataMap toMap() {
-    return {'id': paintId, 'uid': uid, 'url': url, 'created': created, 'updated': updated};
+    return {
+      'paintId': paintId,
+      'uid': uid,
+      'imageUrl': imageUrl,
+      'created': created,
+      'updated': updated,
+    };
   }
 
   PaintModel.empty()
-    : this(paintId: '', uid: '',  url: '', created: Timestamp.now(), updated: Timestamp.now());
+    : this(
+        paintId: '',
+        uid: '',
+        imageUrl: '',
+        created: DateTime.now().toIso8601String(),
+        updated: DateTime.now().toIso8601String(),
+      );
 }

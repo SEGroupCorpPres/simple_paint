@@ -40,9 +40,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         if (state is AuthLoadingState) {
           showDialog(
             context: context,
-            builder: (context) => const SimpleDialog(
-              children: [Center(child: CircularProgressIndicator.adaptive())],
-            ),
+            builder: (context) =>
+                const SimpleDialog(children: [Center(child: CircularProgressIndicator.adaptive())]),
           );
         }
       },
@@ -77,7 +76,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           bodyChildren: [
             BlocConsumer<PaintBloc, PaintState>(
               listener: (context, state) {
-                if (state is CreatePaintState || state is UpdatePaintState || state is DeletePaintState) {
+                if (state is CreatePaintState ||
+                    state is UpdatePaintState ||
+                    state is DeletePaintState) {
                   NotificationService().showNotification(title: 'Add new Image');
                 }
                 // TODO: implement listener
@@ -95,7 +96,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               builder: (context, state) {
                 if (state is LoadingPaintState) {
                   return SizedBox(
-                    height: MediaQuery.sizeOf(context).height - MediaQuery.of(context).padding.top - kToolbarHeight,
+                    height:
+                        MediaQuery.sizeOf(context).height -
+                        MediaQuery.of(context).padding.top -
+                        kToolbarHeight,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
