@@ -10,17 +10,41 @@ class ImageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onLongPress: () {
+        showAdaptiveDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Delete Paint"),
+              content: Text("Are you sure you want to delete this paint?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    context.read<PaintBloc>().add(DeletePaintEvent(id: paint.paintId));
+                    context.read<PaintBloc>().add(GetPaintsListEvent());
+                    context.pop();
+                  },
+                  child: Text("Delete"),
+                ),
+              ],
+            );
+          },
+        );
+      },
       onTap: () {
         context.read<PaintBloc>().add(GetPaintEvent(id: paint.paintId));
-        context.push(RouterNames.paint, extra: {'id': paint.paintId, 'isEdit': true});
+        context.push(RouterNames.paint);
       },
       child: Container(
         margin: EdgeInsets.only(bottom: index != 10 ? 0 : 100),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          image: DecorationImage(image: NetworkImage(paint.imageUrl!), fit: BoxFit.cover),
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+        child: Image.file(File(paint.imageUrl!)),
       ),
     );
   }

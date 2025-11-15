@@ -4,10 +4,7 @@ import 'package:simple_paint/core/core.dart';
 import 'package:simple_paint/features/paint/paint.dart';
 
 class AddEditPaintPage extends StatefulWidget {
-  const AddEditPaintPage({super.key, required this.id, required this.isEdit});
-
-  final String? id;
-  final bool isEdit;
+  const AddEditPaintPage({super.key});
 
   @override
   State<AddEditPaintPage> createState() => _AddEditPaintPageState();
@@ -53,29 +50,47 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
     controller.freeStyleMode = mode;
   }
 
-  void setBackground(File? file, String? imgUrl) async {
-    // Obtains an image from network and creates a [ui.Image] object
-    if (imgUrl != null) {
-      controller.background = await PainterImage.fromNetwork(imgUrl);
-    }
-    if (file != null) {
-      final ui.Image myImage = await decodeImageFromList(file.readAsBytesSync());
-      controller.background = myImage.backgroundDrawable;
-    }
-    // Sets the background to the image
+  bool _isLocalPath(String path) {
+    return path.startsWith("/") || path.startsWith("file://");
   }
 
-  Future<void> saveImage(BuildContext context, Size size) async {
+  Future<void> setBackground(File? file, String? imgUrl) async {
+    // 1) LOCAL DB — agar imageUrl `file://` yoki local path bo‘lsa
+    if (imgUrl != null && _isLocalPath(imgUrl)) {
+      final localFile = File(imgUrl);
+      if (await localFile.exists()) {
+        final bytes = await localFile.readAsBytes();
+        final ui.Image img = await decodeImageFromList(bytes);
+
+        controller.background = ImageBackgroundDrawable(image: img);
+        return;
+      }
+    }
+    // 3) LOCAL FILE — file picker yoki gallery’dan kelgan bo‘lsa
+    if (file != null) {
+      final bytes = await file.readAsBytes();
+      final ui.Image img = await decodeImageFromList(bytes);
+
+      controller.background = ImageBackgroundDrawable(image: img);
+    }
+  }
+
+  Future<void> saveImage(BuildContext context, Size size, PaintState state) async {
     final File image = await PainterImage().renderAndSave(controller: controller, size: size);
     DateTime now = DateTime.now();
-    PaintModel paint = PaintModel(
-      uid: '',
-      imageUrl: image.path,
-      paintId: DateTime.now().microsecondsSinceEpoch.toString(),
-      created: DateTime.now().toIso8601String(),
-      updated: DateTime.now().toIso8601String(),
-    );
-    bloc.add(AddPaintEvent(paint: paint, image: image));
+    if (state is GetPaintState) {
+      paintModel = state.paint.copyWith(imageUrl: image.path);
+      bloc.add(UpdatePaintEvent(paint: paintModel, image: image, id: paintModel.paintId));
+    } else {
+      PaintModel paint = PaintModel(
+        uid: '',
+        imageUrl: image.path,
+        paintId: DateTime.now().microsecondsSinceEpoch.toString(),
+        created: DateTime.now().toIso8601String(),
+        updated: DateTime.now().toIso8601String(),
+      );
+      bloc.add(AddPaintEvent(paint: paint, image: image));
+    }
   }
 
   @override
@@ -102,7 +117,12 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
     return Material(
       color: Colors.transparent,
       child: BlocConsumer<PaintBloc, PaintState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is GetPaintState) {
+            paintModel = state.paint;
+            setBackground(null, paintModel.imageUrl);
+          }
+        },
         builder: (context, state) {
           return ScaffoldBuilderWidget(
             isHome: true,
@@ -114,11 +134,12 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
                   width: AppSizes.defaultIconSize.sp,
                 ),
                 onTap: () {
+                  context.read<PaintBloc>().add(GetPaintsListEvent());
                   context.pop();
                 },
               ),
               Text(
-                widget.isEdit
+                state is GetPaintState
                     ? AppConstants.paintPageTitleEdit.tr()
                     : AppConstants.paintPageTitle.tr(),
                 style: Theme.of(context).textTheme.titleLarge,
@@ -126,7 +147,7 @@ class _AddEditPaintPageState extends State<AddEditPaintPage> {
               InkWell(
                 child: SvgPicture.asset(Assets.iconsCheck, width: AppSizes.defaultIconSize.sp),
                 onTap: () {
-                  saveImage(context, size).then((value) {
+                  saveImage(context, size, state).then((value) {
                     context.read<PaintBloc>().add(GetPaintsListEvent());
                     context.pop();
                   });

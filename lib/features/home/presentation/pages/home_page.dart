@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 if (state is CreatePaintState ||
                     state is UpdatePaintState ||
                     state is DeletePaintState) {
-                  NotificationService().showNotification(title: 'Add new Image');
+                  NotificationService().showNotification(title: 'Update Image List');
                 }
                 // TODO: implement listener
                 if (state is EmptyPaintState) {

@@ -45,7 +45,7 @@ class PainterImage {
       throw CacheException('An unexpected error occurred while saving the image.');
     }
   }
-  static Future<ImageBackgroundDrawable> fromNetwork(String imageUrl) async {
+  static Future<ImageBackgroundDrawable> fromDB(String imageUrl) async {
     try {
       debugPrint("📥 Rasm yuklanmoqda: $imageUrl");
 

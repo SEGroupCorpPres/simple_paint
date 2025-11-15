@@ -40,9 +40,7 @@ class AppRouter {
         GoRoute(
           path: RouterNames.paint,
           pageBuilder: (context, state) {
-            final String? id = (state.extra as Map?)?['id'];
-            final bool isEdit = (state.extra as Map?)?['isEdit'] ?? false;
-            return _defaultPageBuilder(AddEditPaintPage(id: id, isEdit: isEdit), state);
+            return _defaultPageBuilder(AddEditPaintPage(), state);
           },
         ),
         GoRoute(
