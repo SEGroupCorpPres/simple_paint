@@ -227,6 +227,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       title: AppConstants.authPageRegistration,
                       size: size,
                     ),
+                    MainBtn(
+                      onPressed: () => context.pop(),
+                      title: AppConstants.authPageSignIn,
+                      size: size,
+                      color: Colors.white,
+                      titleColor: AppColors.secondaryTextColor,
+                    ),
                   ],
                 ),
               ),
