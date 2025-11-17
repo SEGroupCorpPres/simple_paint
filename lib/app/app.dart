@@ -52,6 +52,7 @@ class _MyAppState extends State<MyApp> {
               // debugShowCheckedModeBanner: true,
               scaffoldMessengerKey: rootScaffoldMessengerKey,
               locale: context.locale,
+              debugShowCheckedModeBanner: false,
               supportedLocales: context.supportedLocales,
               localizationsDelegates: context.localizationDelegates,
               title: 'Simple Paint',

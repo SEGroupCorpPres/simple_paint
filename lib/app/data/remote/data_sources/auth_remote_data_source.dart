@@ -58,6 +58,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String fullName,
   }) async {
     try {
+      // check user already exists
+      var userData = await _firebaseFirestore
+          .collection('users')
+          .where('email', isEqualTo: email).limit(1)
+          .get();
+      if (userData.docs.isNotEmpty) {
+        throw const ServerException('User already exists', '409');
+      }
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,

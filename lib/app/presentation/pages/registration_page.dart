@@ -96,7 +96,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       child: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthSignedUpState) {
-
             toastification.show(
               context: context,
               style: ToastificationStyle.fillColored,
@@ -128,6 +127,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
               type: ToastificationType.error,
               autoCloseDuration: const Duration(seconds: 3),
             );
+            Future.delayed(const Duration(seconds: 1), () {
+              if (context.mounted) {
+                context.pop();
+                context.pop();
+              }
+            });
           }
         },
         child: ScaffoldBuilderWidget(
@@ -179,6 +184,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 if (value!.isEmpty || value.length < 6 || value.length > 16) {
                                   return 'Password must be between 8 and 16 characters';
                                 }
+                                return null;
                               },
                             ),
                             AuthTextField(
